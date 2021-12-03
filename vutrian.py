@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0,'C:/Users/Admin/Desktop/chromedriver')
+from Settings import *
+sys.path.insert(0,LINK_DRIVE)
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
@@ -11,6 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 import pickle
 import time
 import validators
+from Settings import *
+from pymongo import MongoClient
+
+account  = MongoClient(CONNECTION_STRING_MGA1).cookie[MAY]
 
 def sleep(seconds):
     for i in range(seconds):
@@ -138,35 +143,35 @@ chrome_options_gui.add_argument('--no-sandbox')
 #chrome_options.add_argument("user-data-dir=profile") # left for debugging
 chrome_options_gui.add_argument('--disable-infobars')
 chrome_options_gui.add_argument('--disable-gpu')
-for i in range(5):
-    options = Options()
-    options.add_argument("start-maximized")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option('useAutomationExtension', False)
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    #chrome_options.add_argument("user-data-dir=profile") # left for debugging
-    options.add_argument('--disable-infobars')
-    wd = webdriver.Chrome("C:/Users/Admin/Desktop/chromedriver", options=options)
-    from selenium_stealth import stealth
+options = Options()
+options.add_argument("start-maximized")
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+#chrome_options.add_argument("user-data-dir=profile") # left for debugging
+options.add_argument('--disable-infobars')
+wd = webdriver.Chrome(LINK_DRIVE, options=options)
+from selenium_stealth import stealth
 
-    stealth(wd,
-            languages=["vi-VN", "vi"],
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-            )
-    try:
-        for cookie in pickle.load(open("gCookies.pkl", "rb")):
-            if cookie["domain"] != "myaccount.google.com":
-                print(cookie)
+stealth(wd,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True,
+        )
+wd.get(colab_urls[0])
+# for i in list(email):
+#     wd.find_element_by_xpath("//*[@id='"+str("identifierId")+"']").send_keys(i)
+#     time.sleep(0.5)
+time.sleep(100)
+new_account = {
+    "email":EMAIL,
+    "cookie":wd.get_cookies(),
+    "listurl":LIST_URL
+}
+account.insert_one(new_account)
 
-                wd.add_cookie(cookie)
-    except Exception:
-        pass
-    wd.get(colab_1)
-    time.sleep(30)
-    pickle.dump(wd.get_cookies(), open("gCookies.pkl", "wb"))
-    wd.close()
-    wd.quit()
+wd.close()
+wd.quit()
