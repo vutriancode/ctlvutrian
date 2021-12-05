@@ -161,15 +161,15 @@ stealth(wd,
         renderer="Intel Iris OpenGL Engine",
         fix_hairline=True,
         )
-wd.get(colab_urls[0])
+wd.get(LIST_URL4[0])
 # for i in list(email):
 #     wd.find_element_by_xpath("//*[@id='"+str("identifierId")+"']").send_keys(i)
 #     time.sleep(0.5)
 time.sleep(100)
 new_account = {
-    "email":EMAIL,
+    "email":EMAIL4,
     "cookie":wd.get_cookies(),
-    "listurl":LIST_URL
+    "listurl":LIST_URL4
 }
 account.insert_one(new_account)
 
