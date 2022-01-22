@@ -245,60 +245,62 @@ for cookies in cookiess:
 
 while True:
     for index, wd in enumerate(wds):
+
         for index,colab_url in enumerate(cookiess[index]["listurl"]):
-            complete = False
-            new_tab(wd,colab_url,index)
+            try:
+                complete = False
+                new_tab(wd,colab_url,index)
 
-            print("Logged in.") # for debugging
-            running = True
-            wait_for_xpath(wd, '//*[@id="file-menu-button"]/div/div/div[1]')
-            print('Notebook loaded.')
-            sleep(10)
-            webdriver.ActionChains(wd).key_down(Keys.CONTROL).send_keys(Keys.F9).perform()
+                print("Logged in.") # for debugging
+                running = True
+                wait_for_xpath(wd, '//*[@id="file-menu-button"]/div/div/div[1]')
+                print('Notebook loaded.')
+                sleep(10)
+                webdriver.ActionChains(wd).key_down(Keys.CONTROL).send_keys(Keys.F9).perform()
 
-            # while not exists_by_text(wd, "Sign in"):
-            if exists_by_text(wd, "Runtime disconnected"):
+                # while not exists_by_text(wd, "Sign in"):
+                if exists_by_text(wd, "Runtime disconnected"):
+                    try:
+                        wd.find_element_by_xpath('//*[@id="ok"]').click()
+                    except NoSuchElementException:
+                        pass
+                if exists_by_text2(wd, "Notebook loading error"):
+                    running = False
+
+                    wd.get(colab_url)
                 try:
-                    wd.find_element_by_xpath('//*[@id="ok"]').click()
+                    wd.find_element_by_xpath('//*[@id="file-menu-button"]/div/div/div[1]')
+                    if not running:
+                        exists_by_xpath(wd, '//*[@id="ok"]', 10)
+                        wd.find_element_by_xpath('//*[@id="ok"]').click()
+                        sleep(10)
+                        wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.F9)
+                        running = True
                 except NoSuchElementException:
                     pass
-            if exists_by_text2(wd, "Notebook loading error"):
-                running = False
-
-                wd.get(colab_url)
-            try:
-                wd.find_element_by_xpath('//*[@id="file-menu-button"]/div/div/div[1]')
-                if not running:
-                    wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + "q")
-                    wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + "k")
-                    exists_by_xpath(wd, '//*[@id="ok"]', 10)
-                    wd.find_element_by_xpath('//*[@id="ok"]').click()
-                    sleep(10)
-                    wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.F9)
-                    running = True
-            except NoSuchElementException:
-                pass
-            if running:
-                try:
-                    wd.find_element_by_css_selector('.notebook-content-background').click()
-                    #actions = ActionChains(wd)
-                    #actions.send_keys(Keys.SPACE).perform()
-                    scroll_to_bottom(wd)
-                    print("performed scroll")
-                except:
-                    pass
-                for frame in wd.find_elements_by_tag_name('iframe'):
-                    wd.switch_to.frame(frame)
-                    '''
-                    links = browser.find_elements_by_partial_link_text('oauth2/auth')
-                    for link in links:
-                        new_tab(wd, link.get_attribute("href"), 1)
-                        wd.find_element_by_css_selector('li.M8HEDc:nth-child(1)>div:nth-child(1)').click()
-                        wd.find_element_by_css_selector('#submit_approve_access>content:nth-child(3)>span:nth-child(1)').click()
-                        auth_code = wd.find_element_by_xpath('/html/body/div[1]/div[1]/div[2]/div[2]/div/div/div[2]/div/div/div/form/content/section/div/content/div/div/div/textarea').text
-                    '''
-                    wd.switch_to.default_content()
-                    if complete:
-                        break
-                # if complete:
-                #     break
+                if running:
+                    try:
+                        wd.find_element_by_css_selector('.notebook-content-background').click()
+                        #actions = ActionChains(wd)
+                        #actions.send_keys(Keys.SPACE).perform()
+                        scroll_to_bottom(wd)
+                        print("performed scroll")
+                    except:
+                        pass
+                    for frame in wd.find_elements_by_tag_name('iframe'):
+                        wd.switch_to.frame(frame)
+                        '''
+                        links = browser.find_elements_by_partial_link_text('oauth2/auth')
+                        for link in links:
+                            new_tab(wd, link.get_attribute("href"), 1)
+                            wd.find_element_by_css_selector('li.M8HEDc:nth-child(1)>div:nth-child(1)').click()
+                            wd.find_element_by_css_selector('#submit_approve_access>content:nth-child(3)>span:nth-child(1)').click()
+                            auth_code = wd.find_element_by_xpath('/html/body/div[1]/div[1]/div[2]/div[2]/div/div/div[2]/div/div/div/form/content/section/div/content/div/div/div/textarea').text
+                        '''
+                        wd.switch_to.default_content()
+                        if complete:
+                            break
+            except Exception as e:
+                print(e)
+                    # if complete:
+                    #     break
