@@ -208,8 +208,6 @@ for cookies in cookiess:
         try:
             wd.find_element_by_xpath('//*[@id="file-menu-button"]/div/div/div[1]')
             if not running:
-                wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + "q")
-                wd.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.SHIFT + "k")
                 exists_by_xpath(wd, '//*[@id="ok"]', 10)
                 wd.find_element_by_xpath('//*[@id="ok"]').click()
                 sleep(10)
