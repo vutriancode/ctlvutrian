@@ -1,0 +1,3 @@
+selenium
+validators
+pymongo==3.10.0
