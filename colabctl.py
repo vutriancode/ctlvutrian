@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'C:/Users/vutri/Desktop/chromedriver')
+sys.path.insert(0,'/usr/bin/chromedriver')
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException

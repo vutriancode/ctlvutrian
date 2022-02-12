@@ -1,4 +1,4 @@
-LINK_DRIVE = "C:/Users/vutri/Desktop/chromedriver"
+LINK_DRIVE = "/usr/bin/chromedriver"
 CONNECTION_STRING_MGA1 = "mongodb://mdata_admin:kalilinux2018@23.172.112.93:27017/admin?retryWrites=true&w=majority"
 EMAIL1 = "tathanhcong89766@gmail.com"
 MK1 = "HBlegrqip52034"
